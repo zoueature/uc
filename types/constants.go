@@ -15,9 +15,6 @@ type LoginType string
 const (
 	EmailLogin  LoginType = "email"
 	MobileLogin LoginType = "mobile"
-
-	FacebookLogin LoginType = "facebook"
-	GoogleLogin   LoginType = "google"
 )
 
 type VerifyCodeType string

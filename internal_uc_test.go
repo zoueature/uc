@@ -10,8 +10,6 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	println(123)
-
 	m.Run()
 }
 

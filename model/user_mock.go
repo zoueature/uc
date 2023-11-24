@@ -11,6 +11,43 @@ import (
 	types "github.com/jiebutech/uc/types"
 )
 
+// MockEntity is a mock of Entity interface.
+type MockEntity struct {
+	ctrl     *gomock.Controller
+	recorder *MockEntityMockRecorder
+}
+
+// MockEntityMockRecorder is the mock recorder for MockEntity.
+type MockEntityMockRecorder struct {
+	mock *MockEntity
+}
+
+// NewMockEntity creates a new mock instance.
+func NewMockEntity(ctrl *gomock.Controller) *MockEntity {
+	mock := &MockEntity{ctrl: ctrl}
+	mock.recorder = &MockEntityMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockEntity) EXPECT() *MockEntityMockRecorder {
+	return m.recorder
+}
+
+// TableName mocks base method.
+func (m *MockEntity) TableName() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TableName")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// TableName indicates an expected call of TableName.
+func (mr *MockEntityMockRecorder) TableName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TableName", reflect.TypeOf((*MockEntity)(nil).TableName))
+}
+
 // MockUserEntity is a mock of UserEntity interface.
 type MockUserEntity struct {
 	ctrl     *gomock.Controller
@@ -188,6 +225,18 @@ func (mr *MockUserEntityMockRecorder) PasswordKey() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PasswordKey", reflect.TypeOf((*MockUserEntity)(nil).PasswordKey))
 }
 
+// SetAvatar mocks base method.
+func (m *MockUserEntity) SetAvatar(avatar string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetAvatar", avatar)
+}
+
+// SetAvatar indicates an expected call of SetAvatar.
+func (mr *MockUserEntityMockRecorder) SetAvatar(avatar interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAvatar", reflect.TypeOf((*MockUserEntity)(nil).SetAvatar), avatar)
+}
+
 // SetId mocks base method.
 func (m *MockUserEntity) SetId(id int64) {
 	m.ctrl.T.Helper()
@@ -222,6 +271,30 @@ func (m *MockUserEntity) SetLoginType(loginType types.LoginType) {
 func (mr *MockUserEntityMockRecorder) SetLoginType(loginType interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLoginType", reflect.TypeOf((*MockUserEntity)(nil).SetLoginType), loginType)
+}
+
+// SetNickname mocks base method.
+func (m *MockUserEntity) SetNickname(nickname string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetNickname", nickname)
+}
+
+// SetNickname indicates an expected call of SetNickname.
+func (mr *MockUserEntityMockRecorder) SetNickname(nickname interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetNickname", reflect.TypeOf((*MockUserEntity)(nil).SetNickname), nickname)
+}
+
+// SetPassword mocks base method.
+func (m *MockUserEntity) SetPassword(password string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetPassword", password)
+}
+
+// SetPassword indicates an expected call of SetPassword.
+func (mr *MockUserEntityMockRecorder) SetPassword(password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPassword", reflect.TypeOf((*MockUserEntity)(nil).SetPassword), password)
 }
 
 // SetUsername mocks base method.
@@ -278,6 +351,135 @@ func (mr *MockUserEntityMockRecorder) UsernameKey() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UsernameKey", reflect.TypeOf((*MockUserEntity)(nil).UsernameKey))
 }
 
+// MockOauthUserEntity is a mock of OauthUserEntity interface.
+type MockOauthUserEntity struct {
+	ctrl     *gomock.Controller
+	recorder *MockOauthUserEntityMockRecorder
+}
+
+// MockOauthUserEntityMockRecorder is the mock recorder for MockOauthUserEntity.
+type MockOauthUserEntityMockRecorder struct {
+	mock *MockOauthUserEntity
+}
+
+// NewMockOauthUserEntity creates a new mock instance.
+func NewMockOauthUserEntity(ctrl *gomock.Controller) *MockOauthUserEntity {
+	mock := &MockOauthUserEntity{ctrl: ctrl}
+	mock.recorder = &MockOauthUserEntityMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockOauthUserEntity) EXPECT() *MockOauthUserEntityMockRecorder {
+	return m.recorder
+}
+
+// GetBindUserId mocks base method.
+func (m *MockOauthUserEntity) GetBindUserId() int64 {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBindUserId")
+	ret0, _ := ret[0].(int64)
+	return ret0
+}
+
+// GetBindUserId indicates an expected call of GetBindUserId.
+func (mr *MockOauthUserEntityMockRecorder) GetBindUserId() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBindUserId", reflect.TypeOf((*MockOauthUserEntity)(nil).GetBindUserId))
+}
+
+// GetOpenid mocks base method.
+func (m *MockOauthUserEntity) GetOpenid() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOpenid")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetOpenid indicates an expected call of GetOpenid.
+func (mr *MockOauthUserEntityMockRecorder) GetOpenid() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOpenid", reflect.TypeOf((*MockOauthUserEntity)(nil).GetOpenid))
+}
+
+// LoginTypeKey mocks base method.
+func (m *MockOauthUserEntity) LoginTypeKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoginTypeKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// LoginTypeKey indicates an expected call of LoginTypeKey.
+func (mr *MockOauthUserEntityMockRecorder) LoginTypeKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginTypeKey", reflect.TypeOf((*MockOauthUserEntity)(nil).LoginTypeKey))
+}
+
+// OpenidKey mocks base method.
+func (m *MockOauthUserEntity) OpenidKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OpenidKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// OpenidKey indicates an expected call of OpenidKey.
+func (mr *MockOauthUserEntityMockRecorder) OpenidKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpenidKey", reflect.TypeOf((*MockOauthUserEntity)(nil).OpenidKey))
+}
+
+// SetBindUserId mocks base method.
+func (m *MockOauthUserEntity) SetBindUserId(uuserid int64) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetBindUserId", uuserid)
+}
+
+// SetBindUserId indicates an expected call of SetBindUserId.
+func (mr *MockOauthUserEntityMockRecorder) SetBindUserId(uuserid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBindUserId", reflect.TypeOf((*MockOauthUserEntity)(nil).SetBindUserId), uuserid)
+}
+
+// SetLoginType mocks base method.
+func (m *MockOauthUserEntity) SetLoginType(loginType types.LoginType) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetLoginType", loginType)
+}
+
+// SetLoginType indicates an expected call of SetLoginType.
+func (mr *MockOauthUserEntityMockRecorder) SetLoginType(loginType interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLoginType", reflect.TypeOf((*MockOauthUserEntity)(nil).SetLoginType), loginType)
+}
+
+// SetOpenid mocks base method.
+func (m *MockOauthUserEntity) SetOpenid(openid string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetOpenid", openid)
+}
+
+// SetOpenid indicates an expected call of SetOpenid.
+func (mr *MockOauthUserEntityMockRecorder) SetOpenid(openid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOpenid", reflect.TypeOf((*MockOauthUserEntity)(nil).SetOpenid), openid)
+}
+
+// TableName mocks base method.
+func (m *MockOauthUserEntity) TableName() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TableName")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// TableName indicates an expected call of TableName.
+func (mr *MockOauthUserEntityMockRecorder) TableName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TableName", reflect.TypeOf((*MockOauthUserEntity)(nil).TableName))
+}
+
 // MockUserResource is a mock of UserResource interface.
 type MockUserResource struct {
 	ctrl     *gomock.Controller
@@ -301,6 +503,34 @@ func (m *MockUserResource) EXPECT() *MockUserResourceMockRecorder {
 	return m.recorder
 }
 
+// CreateUser mocks base method.
+func (m *MockUserResource) CreateUser(dest Entity) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", dest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateUser indicates an expected call of CreateUser.
+func (mr *MockUserResourceMockRecorder) CreateUser(dest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserResource)(nil).CreateUser), dest)
+}
+
+// GenOauthUser mocks base method.
+func (m *MockUserResource) GenOauthUser() OauthUserEntity {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenOauthUser")
+	ret0, _ := ret[0].(OauthUserEntity)
+	return ret0
+}
+
+// GenOauthUser indicates an expected call of GenOauthUser.
+func (mr *MockUserResourceMockRecorder) GenOauthUser() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenOauthUser", reflect.TypeOf((*MockUserResource)(nil).GenOauthUser))
+}
+
 // GenUser mocks base method.
 func (m *MockUserResource) GenUser() UserEntity {
 	m.ctrl.T.Helper()
@@ -313,6 +543,34 @@ func (m *MockUserResource) GenUser() UserEntity {
 func (mr *MockUserResourceMockRecorder) GenUser() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenUser", reflect.TypeOf((*MockUserResource)(nil).GenUser))
+}
+
+// GetOauthByOpenid mocks base method.
+func (m *MockUserResource) GetOauthByOpenid(dest OauthUserEntity) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOauthByOpenid", dest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetOauthByOpenid indicates an expected call of GetOauthByOpenid.
+func (mr *MockUserResourceMockRecorder) GetOauthByOpenid(dest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOauthByOpenid", reflect.TypeOf((*MockUserResource)(nil).GetOauthByOpenid), dest)
+}
+
+// GetUserById mocks base method.
+func (m *MockUserResource) GetUserById(dest UserEntity) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserById", dest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetUserById indicates an expected call of GetUserById.
+func (mr *MockUserResourceMockRecorder) GetUserById(dest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserById", reflect.TypeOf((*MockUserResource)(nil).GetUserById), dest)
 }
 
 // GetUserByIdentify mocks base method.
@@ -341,6 +599,62 @@ func (m *MockUserResource) GetUserByUsername(dest UserEntity) error {
 func (mr *MockUserResourceMockRecorder) GetUserByUsername(dest interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockUserResource)(nil).GetUserByUsername), dest)
+}
+
+// IsUserNotFound mocks base method.
+func (m *MockUserResource) IsUserNotFound(err error) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsUserNotFound", err)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsUserNotFound indicates an expected call of IsUserNotFound.
+func (mr *MockUserResourceMockRecorder) IsUserNotFound(err interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsUserNotFound", reflect.TypeOf((*MockUserResource)(nil).IsUserNotFound), err)
+}
+
+// SaveUser mocks base method.
+func (m *MockUserResource) SaveUser(dest Entity) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveUser", dest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveUser indicates an expected call of SaveUser.
+func (mr *MockUserResourceMockRecorder) SaveUser(dest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveUser", reflect.TypeOf((*MockUserResource)(nil).SaveUser), dest)
+}
+
+// TransactionCreate mocks base method.
+func (m *MockUserResource) TransactionCreate(tablers map[Entity]func()) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TransactionCreate", tablers)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// TransactionCreate indicates an expected call of TransactionCreate.
+func (mr *MockUserResourceMockRecorder) TransactionCreate(tablers interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TransactionCreate", reflect.TypeOf((*MockUserResource)(nil).TransactionCreate), tablers)
+}
+
+// TransactionSave mocks base method.
+func (m *MockUserResource) TransactionSave(tablers map[Entity]func()) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TransactionSave", tablers)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// TransactionSave indicates an expected call of TransactionSave.
+func (mr *MockUserResourceMockRecorder) TransactionSave(tablers interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TransactionSave", reflect.TypeOf((*MockUserResource)(nil).TransactionSave), tablers)
 }
 
 // UpdatePassword mocks base method.

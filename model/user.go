@@ -80,6 +80,18 @@ func (u *User) GetPassword() string {
 	return u.Password
 }
 
+func (u *User) SetNickname(nickname string) {
+	u.Nickname = nickname
+}
+
+func (u *User) SetAvatar(avatar string) {
+	u.Avatar = avatar
+}
+
+func (u *User) SetPassword(password string) {
+	u.Password = password
+}
+
 func (u *User) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"id":        u.Id,

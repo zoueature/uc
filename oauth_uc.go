@@ -99,7 +99,7 @@ func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string
 
 }
 
-func (o *OauthClient) register(loginType types.OauthLoginType, oauthUser *model.OauthUserInfo) (model.UserEntity, error) {
+func (o *OauthClient) register(loginType types.OauthLoginType, oauthUser *oauth.UserInfo) (model.UserEntity, error) {
 	user := o.userRepo.GenUser()
 	user.SetLoginType(loginType.LoginType())
 	user.SetUsername(fmt.Sprintf("%s-%s", string(loginType.LoginType()), oauthUser.Openid))

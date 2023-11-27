@@ -67,6 +67,59 @@ func (c UserClient) LoginByUsername(t types.LoginType, username string, password
 	return token, user, nil
 }
 
+type UserInfo struct {
+	Type     types.LoginType
+	Identify string
+	Password Password
+	Avatar   string
+	Nickname string
+	Username string
+}
+
+// Register 注册
+func (c UserClient) Register(code string, info UserInfo) (string, model.UserEntity, error) {
+	ok, err := c.checkCode(types.RegisterCodeType, info.Identify, code)
+	if err != nil {
+		return "", nil, err
+	}
+	if !ok {
+		return "", nil, types.CodeNotMathErr
+	}
+	return c.register(info)
+}
+
+// RegisterWithNoCode 无验证码注册
+func (c UserClient) RegisterWithNoCode(info UserInfo) (string, model.UserEntity, error) {
+	return c.register(info)
+}
+
+func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
+	user := c.userRepo.GenUser()
+	user.SetLoginType(info.Type)
+	user.SetIdentify(info.Identify)
+	user.SetUsername(info.Username)
+	user.SetPassword(info.Password.marshalPassword())
+	user.SetAvatar(info.Avatar)
+	user.SetNickname(info.Nickname)
+	err := c.userRepo.GetUserByIdentify(user)
+	if err == nil {
+		return "", nil, types.UserExistsErr
+	}
+	err = c.userRepo.GetUserByUsername(user)
+	if err == nil {
+		return "", nil, types.UserExistsErr
+	}
+	err = c.userRepo.CreateUser(user)
+	if err != nil {
+		return "", nil, err
+	}
+	token, err := encodeJwt(user)
+	if err != nil {
+		return "", nil, err
+	}
+	return token, user, nil
+}
+
 func (c *UserClient) checkCode(t types.VerifyCodeType, identify string, code string) (bool, error) {
 	ckey, err := t.CacheKey()
 	if err != nil {

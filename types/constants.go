@@ -10,6 +10,7 @@ var (
 	PasswordNotMathErr   = errors.New("password not match")
 	CodeNotMathErr       = errors.New("code not match")
 	EqualOldPasswordErr  = errors.New("password equal the old one")
+	UserExistsErr        = errors.New("user exists")
 )
 
 type LoginType string

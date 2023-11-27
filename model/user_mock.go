@@ -71,6 +71,34 @@ func (m *MockUserEntity) EXPECT() *MockUserEntityMockRecorder {
 	return m.recorder
 }
 
+// AppKey mocks base method.
+func (m *MockUserEntity) AppKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AppKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AppKey indicates an expected call of AppKey.
+func (mr *MockUserEntityMockRecorder) AppKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppKey", reflect.TypeOf((*MockUserEntity)(nil).AppKey))
+}
+
+// GetApp mocks base method.
+func (m *MockUserEntity) GetApp() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetApp")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetApp indicates an expected call of GetApp.
+func (mr *MockUserEntityMockRecorder) GetApp() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetApp", reflect.TypeOf((*MockUserEntity)(nil).GetApp))
+}
+
 // GetAvatar mocks base method.
 func (m *MockUserEntity) GetAvatar() string {
 	m.ctrl.T.Helper()
@@ -225,6 +253,18 @@ func (mr *MockUserEntityMockRecorder) PasswordKey() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PasswordKey", reflect.TypeOf((*MockUserEntity)(nil).PasswordKey))
 }
 
+// SetApp mocks base method.
+func (m *MockUserEntity) SetApp(string2 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetApp", string2)
+}
+
+// SetApp indicates an expected call of SetApp.
+func (mr *MockUserEntityMockRecorder) SetApp(string2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetApp", reflect.TypeOf((*MockUserEntity)(nil).SetApp), string2)
+}
+
 // SetAvatar mocks base method.
 func (m *MockUserEntity) SetAvatar(avatar string) {
 	m.ctrl.T.Helper()
@@ -374,6 +414,34 @@ func (m *MockOauthUserEntity) EXPECT() *MockOauthUserEntityMockRecorder {
 	return m.recorder
 }
 
+// AppKey mocks base method.
+func (m *MockOauthUserEntity) AppKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AppKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AppKey indicates an expected call of AppKey.
+func (mr *MockOauthUserEntityMockRecorder) AppKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppKey", reflect.TypeOf((*MockOauthUserEntity)(nil).AppKey))
+}
+
+// GetApp mocks base method.
+func (m *MockOauthUserEntity) GetApp() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetApp")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetApp indicates an expected call of GetApp.
+func (mr *MockOauthUserEntityMockRecorder) GetApp() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetApp", reflect.TypeOf((*MockOauthUserEntity)(nil).GetApp))
+}
+
 // GetBindUserId mocks base method.
 func (m *MockOauthUserEntity) GetBindUserId() int64 {
 	m.ctrl.T.Helper()
@@ -428,6 +496,18 @@ func (m *MockOauthUserEntity) OpenidKey() string {
 func (mr *MockOauthUserEntityMockRecorder) OpenidKey() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpenidKey", reflect.TypeOf((*MockOauthUserEntity)(nil).OpenidKey))
+}
+
+// SetApp mocks base method.
+func (m *MockOauthUserEntity) SetApp(string2 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetApp", string2)
+}
+
+// SetApp indicates an expected call of SetApp.
+func (mr *MockOauthUserEntityMockRecorder) SetApp(string2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetApp", reflect.TypeOf((*MockOauthUserEntity)(nil).SetApp), string2)
 }
 
 // SetBindUserId mocks base method.

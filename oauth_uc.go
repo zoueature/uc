@@ -11,17 +11,19 @@ import (
 type OauthClient struct {
 	oauthCliMap sync.Map
 	userRepo    model.UserResource
+	jwt         JwtEncoder
 }
 
 var oauthCli *OauthClient
 var onceNewOauth = sync.Once{}
 
 // NewOauthClient 实例化第三方登录客户端
-func NewOauthClient(userRepo model.UserResource) *OauthClient {
+func NewOauthClient(userRepo model.UserResource, jwtClient JwtEncoder) *OauthClient {
 	onceNewOauth.Do(func() {
 		oauthCli = &OauthClient{
 			userRepo:    userRepo,
 			oauthCliMap: sync.Map{},
+			jwt:         jwtClient,
 		}
 	})
 	return oauthCli
@@ -91,7 +93,7 @@ func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string
 			return "", nil, err
 		}
 	}
-	token, err := encodeJwt(user)
+	token, err := o.jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}

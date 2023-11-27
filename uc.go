@@ -12,32 +12,20 @@ type UserClient struct {
 	cache    cache.Cache
 	sender   sender.SmsCodeSender
 	userRepo model.UserResource
+	jwt      JwtEncoder
 }
 
 var ucCli *UserClient
 var onceNewUc = sync.Once{}
 
-type UserIdentify struct {
-	App      string
-	Type     types.LoginType
-	Identify string
-}
-
-type UserInfo struct {
-	UserIdentify
-	Password Password
-	Avatar   string
-	Nickname string
-	Username string
-}
-
 // NewUserClient 实例化用户操作客户端
-func NewUserClient(cache cache.Cache, sender sender.SmsCodeSender, repo model.UserResource) *UserClient {
+func NewUserClient(cache cache.Cache, sender sender.SmsCodeSender, repo model.UserResource, jwtClient JwtEncoder) *UserClient {
 	onceNewUc.Do(func() {
 		ucCli = &UserClient{
 			cache:    cache,
 			sender:   sender,
 			userRepo: repo,
+			jwt:      jwtClient,
 		}
 	})
 	return ucCli
@@ -56,7 +44,7 @@ func (c *UserClient) Login(id UserIdentify, password Password) (string, model.Us
 	if user.GetPassword() != password.marshalPassword() {
 		return "", nil, types.PasswordNotMathErr
 	}
-	token, err := encodeJwt(user)
+	token, err := c.jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}
@@ -76,7 +64,7 @@ func (c UserClient) LoginByUsername(app string, t types.LoginType, username stri
 	if user.GetPassword() != password.marshalPassword() {
 		return "", nil, types.PasswordNotMathErr
 	}
-	token, err := encodeJwt(user)
+	token, err := c.jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}
@@ -102,6 +90,7 @@ func (c UserClient) RegisterWithNoCode(info UserInfo) (string, model.UserEntity,
 
 func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	user := c.userRepo.GenUser()
+	user.SetApp(info.App)
 	user.SetLoginType(info.Type)
 	user.SetIdentify(info.Identify)
 	user.SetUsername(info.Username)
@@ -120,7 +109,7 @@ func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	if err != nil {
 		return "", nil, err
 	}
-	token, err := encodeJwt(user)
+	token, err := c.jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}

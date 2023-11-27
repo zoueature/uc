@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/jiebutech/uc/model"
 	"io"
 	"net/http"
 	"net/url"
@@ -36,8 +35,8 @@ type fbUserInfoResp struct {
 	Name string `json:"name"`
 }
 
-func (r fbUserInfoResp) ToOauthUser() *model.OauthUserInfo {
-	return &model.OauthUserInfo{
+func (r fbUserInfoResp) ToOauthUser() *UserInfo {
+	return &UserInfo{
 		Openid:   r.ID,
 		Nickname: r.Name,
 	}
@@ -73,7 +72,7 @@ func (cli *fbCli) GetAccessToken(code string) (string, error) {
 
 }
 
-func (cli *fbCli) GetOauthUserInfo(token string) (*model.OauthUserInfo, error) {
+func (cli *fbCli) GetOauthUserInfo(token string) (*UserInfo, error) {
 	param := url.Values{}
 	param.Add("access_token", token)
 	req, err := http.NewRequest(http.MethodGet, fbGetUserInfoURL, strings.NewReader(param.Encode()))

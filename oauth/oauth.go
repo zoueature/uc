@@ -1,12 +1,15 @@
 package oauth
 
-import (
-	"github.com/jiebutech/uc/model"
-)
+type UserInfo struct {
+	Openid   string
+	Nickname string
+	Avatar   string
+	Email    string
+}
 
 type Oauth interface {
 	GetAccessToken(code string) (string, error)
-	GetOauthUserInfo(token string) (*model.OauthUserInfo, error)
+	GetOauthUserInfo(token string) (*UserInfo, error)
 	GenAuthLoginURL() string
 }
 

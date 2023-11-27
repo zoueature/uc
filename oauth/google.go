@@ -3,7 +3,6 @@ package oauth
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jiebutech/uc/model"
 	"io"
 	"net/http"
 	"net/url"
@@ -26,8 +25,8 @@ type googleUserInfoResp struct {
 	Picture string `json:"picture"`
 }
 
-func (r googleUserInfoResp) ToOauthUser() *model.OauthUserInfo {
-	return &model.OauthUserInfo{
+func (r googleUserInfoResp) ToOauthUser() *UserInfo {
+	return &UserInfo{
 		Openid: r.ID,
 		Avatar: r.Picture,
 		Email:  r.Email,
@@ -41,7 +40,7 @@ func (g *googleCli) GetAccessToken(code string) (string, error) {
 }
 
 // GetOauthUserInfo 获取用户信息
-func (g *googleCli) GetOauthUserInfo(token string) (*model.OauthUserInfo, error) {
+func (g *googleCli) GetOauthUserInfo(token string) (*UserInfo, error) {
 	param := url.Values{}
 	param.Add("access_token", token)
 	req, err := http.NewRequest(http.MethodGet, googleGetUserInfoURL, strings.NewReader(param.Encode()))

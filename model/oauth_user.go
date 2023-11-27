@@ -2,13 +2,6 @@ package model
 
 import "github.com/jiebutech/uc/types"
 
-type OauthUserInfo struct {
-	Openid   string
-	Nickname string
-	Avatar   string
-	Email    string
-}
-
 type OauthUser struct {
 	Id         int64           `json:"id" gorm:"id"`
 	App        string          `json:"app" gorm:"app"`

@@ -27,8 +27,13 @@ func NewOauthClient(userRepo model.UserResource) *OauthClient {
 	return oauthCli
 }
 
+type OauthOption struct {
+	LoginType types.OauthLoginType
+	Cfg       oauth.Config
+}
+
 // WithLoginType 注入登录方式
-func (o *OauthClient) WithLoginType(option oauth.OauthOption, cover ...bool) *OauthClient {
+func (o *OauthClient) WithLoginType(option OauthOption, cover ...bool) *OauthClient {
 	_, ok := o.oauthCliMap.Load(option.LoginType.LoginType())
 	if !ok || (len(cover) > 0 && cover[0]) {
 		o.oauthCliMap.Store(option.LoginType.LoginType(), option.LoginType.New(option.Cfg))

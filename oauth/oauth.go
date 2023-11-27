@@ -2,7 +2,6 @@ package oauth
 
 import (
 	"github.com/jiebutech/uc/model"
-	"github.com/jiebutech/uc/types"
 )
 
 type Oauth interface {
@@ -16,9 +15,4 @@ type Config interface {
 	ClientId() string
 	ClientSecret() string
 	RedirectURI() string
-}
-
-type OauthOption struct {
-	LoginType types.OauthLoginType
-	Cfg       Config
 }

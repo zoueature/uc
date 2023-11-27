@@ -8,6 +8,8 @@ import (
 var (
 	UndefinedCodeTypeErr = errors.New("undefined verify code type")
 	PasswordNotMathErr   = errors.New("password not match")
+	CodeNotMathErr       = errors.New("code not match")
+	EqualOldPasswordErr  = errors.New("password equal the old one")
 )
 
 type LoginType string

@@ -8,6 +8,7 @@ import (
 type Oauth interface {
 	GetAccessToken(code string) (string, error)
 	GetOauthUserInfo(token string) (*model.OauthUserInfo, error)
+	GenAuthLoginURL() string
 }
 
 // Config 第三方登录配置

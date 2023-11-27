@@ -13,13 +13,21 @@ type OauthClient struct {
 	userRepo    model.UserResource
 }
 
+var oauthCli *OauthClient
+var onceNewOauth = sync.Once{}
+
+// NewOauthClient 实例化第三方登录客户端
 func NewOauthClient(userRepo model.UserResource) *OauthClient {
-	return &OauthClient{
-		userRepo:    userRepo,
-		oauthCliMap: sync.Map{},
-	}
+	onceNewOauth.Do(func() {
+		oauthCli = &OauthClient{
+			userRepo:    userRepo,
+			oauthCliMap: sync.Map{},
+		}
+	})
+	return oauthCli
 }
 
+// WithLoginType 注入登录方式
 func (o *OauthClient) WithLoginType(option oauth.OauthOption, cover ...bool) *OauthClient {
 	_, ok := o.oauthCliMap.Load(option.LoginType.LoginType())
 	if !ok || (len(cover) > 0 && cover[0]) {
@@ -36,6 +44,7 @@ func (o *OauthClient) oauthCli(loginType types.OauthLoginType) (oauth.Oauth, err
 	return oc.(oauth.Oauth), nil
 }
 
+// Login 登录
 func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string, model.UserEntity, error) {
 	oauthCli, err := o.oauthCli(loginType)
 	if err != nil {

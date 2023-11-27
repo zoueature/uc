@@ -20,6 +20,11 @@ type fbCli struct {
 	redirectURI  string
 	httpCli      http.Client
 }
+
+func (cli *fbCli) GenAuthLoginURL() string {
+	return ""
+}
+
 type fbAccessTokenResp struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`

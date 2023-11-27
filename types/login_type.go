@@ -9,13 +9,17 @@ type OauthLoginType interface {
 
 const (
 	facebookIdentify = "facebook"
+	googleIdentify   = "google"
 )
 
 var (
-	// facebook登录方式
+	// FacebookLoginType facebook登录方式
 	FacebookLoginType OauthLoginType = facebookLoginType(facebookIdentify)
+	// GoogleLoginType google登录方式
+	GoogleLoginType OauthLoginType = googleLoginType(facebookIdentify)
 )
 
+// facebook登录方式相关实现
 type facebookLoginType string
 
 func (f facebookLoginType) LoginType() LoginType {
@@ -24,4 +28,15 @@ func (f facebookLoginType) LoginType() LoginType {
 
 func (f facebookLoginType) New(config oauth.Config) oauth.Oauth {
 	return oauth.NewFacebookOauth(config)
+}
+
+// google登录方式相关实现
+type googleLoginType string
+
+func (f googleLoginType) LoginType() LoginType {
+	return LoginType(f)
+}
+
+func (f googleLoginType) New(config oauth.Config) oauth.Oauth {
+	return oauth.NewGoogleOauth(config)
 }

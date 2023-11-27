@@ -33,7 +33,7 @@ func TestNewInternalClient(t *testing.T) {
 	mockUserRepo.EXPECT().GetUserByIdentify(mockUser).AnyTimes().Return(nil)
 	mockUserRepo.EXPECT().GetUserByUsername(mockUser).AnyTimes().Return(nil)
 
-	cli := NewInternalClient(
+	cli := NewUserClient(
 		cache.NewRedisCache("192.168.1.202:6379", ""),
 		sender.NewEmailSender(&sender.EmailConfig{
 			From:     "zoueature@gmail.com",

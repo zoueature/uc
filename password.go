@@ -5,14 +5,13 @@ import (
 	"encoding/hex"
 )
 
-var salt = "KASd9U)ud0a8ud0hIY*&^^daugsdsa"
-
-func SetSalt(s string) {
-	salt = s
+type Password struct {
+	Salt     string
+	Password string
 }
 
-func marshalPassword(password string) string {
+func (p Password) marshalPassword() string {
 	sh := sha1.New()
-	sum := sh.Sum([]byte(salt + password))
+	sum := sh.Sum([]byte(p.Salt + p.Password))
 	return hex.EncodeToString(sum)
 }

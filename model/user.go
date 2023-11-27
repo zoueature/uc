@@ -4,6 +4,7 @@ import "github.com/jiebutech/uc/types"
 
 type User struct {
 	Id        int64           `json:"id" gorm:"id"`
+	App       string          `json:"app" gorm:"app"`
 	LoginType types.LoginType `json:"loginType" gorm:"login_type"`
 	Identify  string          `json:"identify" gorm:"identify"`
 	Username  string          `json:"username" gorm:"username"`
@@ -100,5 +101,18 @@ func (u *User) ToMap() map[string]interface{} {
 		"username":  u.Username,
 		"nickname":  u.Nickname,
 		"avatar":    u.Avatar,
+		"app":       u.App,
 	}
+}
+
+func (u *User) GetApp() string {
+	return u.App
+}
+
+func (u *User) SetApp(app string) {
+	u.App = app
+}
+
+func (u *User) AppKey() string {
+	return "app"
 }

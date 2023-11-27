@@ -13,6 +13,7 @@ type Entity interface {
 type UserEntity interface {
 	TableName() string
 	ToMap() map[string]interface{}
+
 	GetID() int64
 	GetIdentify() string
 	GetUserName() string
@@ -20,7 +21,9 @@ type UserEntity interface {
 	GetAvatar() string
 	GetPassword() string
 	GetLoginType() types.LoginType
+	GetApp() string
 
+	AppKey() string
 	IdKey() string
 	LoginTypeKey() string
 	IdentifyKey() string
@@ -34,6 +37,7 @@ type UserEntity interface {
 	SetNickname(nickname string)
 	SetAvatar(avatar string)
 	SetPassword(password string)
+	SetApp(string2 string)
 }
 
 type OauthUserEntity interface {
@@ -45,6 +49,9 @@ type OauthUserEntity interface {
 	SetLoginType(loginType types.LoginType)
 	LoginTypeKey() string
 	OpenidKey() string
+	AppKey() string
+	GetApp() string
+	SetApp(string2 string)
 }
 
 // UserResource 用户资源, 集成用户的相关操作

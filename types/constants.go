@@ -49,7 +49,7 @@ func (c CacheKey) CacheKey(args ...interface{}) string {
 }
 
 const (
-	registerCodeCacheKey CacheKey = "register_code_%s"
-	loginCodeCacheKey    CacheKey = "login_code_%s"
-	passwordCodeCacheKey CacheKey = "password_code_%s"
+	registerCodeCacheKey CacheKey = "register_code_%s_%s"
+	loginCodeCacheKey    CacheKey = "login_code_%s_%s"
+	passwordCodeCacheKey CacheKey = "password_code_%s_%s"
 )

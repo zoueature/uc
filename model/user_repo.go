@@ -32,8 +32,8 @@ func (repo *UserRepo) IsUserNotFound(err error) bool {
 }
 
 func (repo *UserRepo) GetOauthByOpenid(dest OauthUserEntity) error {
-	where := fmt.Sprintf("%s = ? AND %s = ?", dest.OpenidKey(), dest.LoginTypeKey())
-	return repo.db.Table(dest.TableName()).Where(where, dest.GetOpenid(), dest.OpenidKey()).Find(dest).Error
+	where := fmt.Sprintf("%s = ? AND %s = ? AND %s = ?", dest.AppKey(), dest.OpenidKey(), dest.LoginTypeKey())
+	return repo.db.Table(dest.TableName()).Where(where, dest.GetApp(), dest.GetOpenid(), dest.OpenidKey()).Find(dest).Error
 }
 
 func (repo *UserRepo) GetUserById(dest UserEntity) error {
@@ -51,17 +51,17 @@ func (repo UserRepo) GenUser() UserEntity {
 
 // GetUserByIdentify 根据标识符获取用户信息
 func (repo *UserRepo) GetUserByIdentify(dest UserEntity) error {
-	whereStr := fmt.Sprintf("%s = ? AND %s = ?", dest.IdentifyKey(), dest.LoginTypeKey())
+	whereStr := fmt.Sprintf("%s = ? AND %s = ? AND %s = ?", dest.AppKey(), dest.IdentifyKey(), dest.LoginTypeKey())
 	return repo.db.Table(dest.TableName()).
-		Where(whereStr, dest.GetIdentify(), dest.GetLoginType()).
+		Where(whereStr, dest.GetApp(), dest.GetIdentify(), dest.GetLoginType()).
 		Find(dest).Error
 }
 
 // GetUserByUsername 根据用户名获取用户信息
 func (repo *UserRepo) GetUserByUsername(dest UserEntity) error {
-	whereStr := fmt.Sprintf("%s = ? AND %s = ?", dest.UsernameKey(), dest.LoginTypeKey())
+	whereStr := fmt.Sprintf("%s = ? AND %s = ? AND %s = ?", dest.AppKey(), dest.UsernameKey(), dest.LoginTypeKey())
 	return repo.db.Table(dest.TableName()).
-		Where(whereStr, dest.GetUserName(), dest.GetLoginType()).
+		Where(whereStr, dest.GetApp(), dest.GetUserName(), dest.GetLoginType()).
 		Find(dest).Error
 }
 

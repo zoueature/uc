@@ -17,6 +17,20 @@ type UserClient struct {
 var ucCli *UserClient
 var onceNewUc = sync.Once{}
 
+type UserIdentify struct {
+	App      string
+	Type     types.LoginType
+	Identify string
+}
+
+type UserInfo struct {
+	UserIdentify
+	Password Password
+	Avatar   string
+	Nickname string
+	Username string
+}
+
 // NewUserClient 实例化用户操作客户端
 func NewUserClient(cache cache.Cache, sender sender.SmsCodeSender, repo model.UserResource) *UserClient {
 	onceNewUc.Do(func() {
@@ -30,10 +44,11 @@ func NewUserClient(cache cache.Cache, sender sender.SmsCodeSender, repo model.Us
 }
 
 // Login 用户登录并返回token
-func (c *UserClient) Login(t types.LoginType, identify string, password Password) (string, model.UserEntity, error) {
+func (c *UserClient) Login(id UserIdentify, password Password) (string, model.UserEntity, error) {
 	user := c.userRepo.GenUser()
-	user.SetLoginType(t)
-	user.SetIdentify(identify)
+	user.SetLoginType(id.Type)
+	user.SetIdentify(id.Identify)
+	user.SetApp(id.App)
 	err := c.userRepo.GetUserByIdentify(user)
 	if err != nil {
 		return "", nil, err
@@ -49,8 +64,9 @@ func (c *UserClient) Login(t types.LoginType, identify string, password Password
 }
 
 // LoginByUsername 用户名密码登录并返回token
-func (c UserClient) LoginByUsername(t types.LoginType, username string, password Password) (string, model.UserEntity, error) {
+func (c UserClient) LoginByUsername(app string, t types.LoginType, username string, password Password) (string, model.UserEntity, error) {
 	user := c.userRepo.GenUser()
+	user.SetApp(app)
 	user.SetLoginType(t)
 	user.SetUsername(username)
 	err := c.userRepo.GetUserByUsername(user)
@@ -67,18 +83,9 @@ func (c UserClient) LoginByUsername(t types.LoginType, username string, password
 	return token, user, nil
 }
 
-type UserInfo struct {
-	Type     types.LoginType
-	Identify string
-	Password Password
-	Avatar   string
-	Nickname string
-	Username string
-}
-
 // Register 注册
 func (c UserClient) Register(code string, info UserInfo) (string, model.UserEntity, error) {
-	ok, err := c.checkCode(types.RegisterCodeType, info.Identify, code)
+	ok, err := c.checkCode(types.RegisterCodeType, info.App, info.Identify, code)
 	if err != nil {
 		return "", nil, err
 	}
@@ -120,34 +127,34 @@ func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	return token, user, nil
 }
 
-func (c *UserClient) checkCode(t types.VerifyCodeType, identify string, code string) (bool, error) {
+func (c *UserClient) checkCode(t types.VerifyCodeType, app, identify string, code string) (bool, error) {
 	ckey, err := t.CacheKey()
 	if err != nil {
 		return false, err
 	}
-	cacheCode := c.cache.Get(ckey.CacheKey(identify))
+	cacheCode := c.cache.Get(ckey.CacheKey(app, identify))
 	return cacheCode == code, nil
 }
 
 // SendSmsCode 验证码发送
-func (c *UserClient) SendSmsCode(t types.VerifyCodeType, identify string) error {
+func (c *UserClient) SendSmsCode(t types.VerifyCodeType, identify UserIdentify) error {
 	ckey, err := t.CacheKey()
 	if err != nil {
 		return err
 	}
 	code := generateSmsCode()
 	// 缓存验证码
-	err = c.cache.Set(ckey.CacheKey(identify), code, codeCacheTTL)
+	err = c.cache.Set(ckey.CacheKey(identify.App, identify.Identify), code, codeCacheTTL)
 	if err != nil {
 		return err
 	}
 	// 调用发送器发送验证码
-	return c.sender.Send(code, identify)
+	return c.sender.Send(code, identify.Identify)
 }
 
 // ChangePasswordByCode 根据验证码修改密码
-func (c *UserClient) ChangePasswordByCode(t types.LoginType, identify, code string, newPassword Password) error {
-	ok, err := c.checkCode(types.PasswordCodeType, identify, code)
+func (c *UserClient) ChangePasswordByCode(identify UserIdentify, code string, newPassword Password) error {
+	ok, err := c.checkCode(types.PasswordCodeType, identify.App, identify.Identify, code)
 	if err != nil {
 		return err
 	}
@@ -155,8 +162,9 @@ func (c *UserClient) ChangePasswordByCode(t types.LoginType, identify, code stri
 		return types.CodeNotMathErr
 	}
 	user := c.userRepo.GenUser()
-	user.SetIdentify(identify)
-	user.SetLoginType(t)
+	user.SetApp(identify.App)
+	user.SetIdentify(identify.Identify)
+	user.SetLoginType(identify.Type)
 	err = c.userRepo.GetUserByIdentify(user)
 	if err != nil {
 		return err
@@ -170,10 +178,11 @@ func (c *UserClient) ChangePasswordByCode(t types.LoginType, identify, code stri
 }
 
 // ChangePasswordByOld 根据旧密码修改密码
-func (c *UserClient) ChangePasswordByOld(t types.LoginType, identify string, oldPassword, newPassword Password) error {
+func (c *UserClient) ChangePasswordByOld(identify UserIdentify, oldPassword, newPassword Password) error {
 	user := c.userRepo.GenUser()
-	user.SetIdentify(identify)
-	user.SetLoginType(t)
+	user.SetIdentify(identify.Identify)
+	user.SetLoginType(identify.Type)
+	user.SetApp(identify.App)
 	err := c.userRepo.GetUserByIdentify(user)
 	if err != nil {
 		return err

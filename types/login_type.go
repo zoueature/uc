@@ -16,7 +16,7 @@ var (
 	// FacebookLoginType facebook登录方式
 	FacebookLoginType OauthLoginType = facebookLoginType(facebookIdentify)
 	// GoogleLoginType google登录方式
-	GoogleLoginType OauthLoginType = googleLoginType(facebookIdentify)
+	GoogleLoginType OauthLoginType = googleLoginType(googleIdentify)
 )
 
 // facebook登录方式相关实现

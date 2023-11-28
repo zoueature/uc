@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 const googleGetUserInfoURL = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -43,7 +42,7 @@ func (g *googleCli) GetAccessToken(code string) (string, error) {
 func (g *googleCli) GetOauthUserInfo(token string) (*UserInfo, error) {
 	param := url.Values{}
 	param.Add("access_token", token)
-	req, err := http.NewRequest(http.MethodGet, googleGetUserInfoURL, strings.NewReader(param.Encode()))
+	req, err := http.NewRequest(http.MethodGet, googleGetUserInfoURL+"?"+param.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}

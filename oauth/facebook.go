@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 const fbGetAccessTokenURL = "https://graph.facebook.com/v18.0/oauth/access_token"
@@ -48,7 +47,7 @@ func (cli *fbCli) GetAccessToken(code string) (string, error) {
 	param.Add("client_secret", cli.clientSecret)
 	param.Add("redirect_uri", cli.redirectURI)
 	param.Add("code", code)
-	req, err := http.NewRequest(http.MethodGet, fbGetAccessTokenURL, strings.NewReader(param.Encode()))
+	req, err := http.NewRequest(http.MethodGet, fbGetAccessTokenURL+"?"+param.Encode(), nil)
 	if err != nil {
 		return "", err
 	}
@@ -75,7 +74,7 @@ func (cli *fbCli) GetAccessToken(code string) (string, error) {
 func (cli *fbCli) GetOauthUserInfo(token string) (*UserInfo, error) {
 	param := url.Values{}
 	param.Add("access_token", token)
-	req, err := http.NewRequest(http.MethodGet, fbGetUserInfoURL, strings.NewReader(param.Encode()))
+	req, err := http.NewRequest(http.MethodGet, fbGetUserInfoURL+"?"+param.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}

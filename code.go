@@ -1,4 +1,4 @@
-package ucgo
+package uc
 
 import "math/rand"
 

@@ -1,4 +1,4 @@
-package ucgo
+package uc
 
 import (
 	"crypto/sha1"

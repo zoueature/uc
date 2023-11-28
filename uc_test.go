@@ -1,4 +1,4 @@
-package ucgo
+package uc
 
 import (
 	"github.com/golang/mock/gomock"

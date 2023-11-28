@@ -30,20 +30,25 @@ func NewOauthClient(userRepo model.UserResource, jwtClient JwtEncoder) *OauthCli
 }
 
 type OauthOption struct {
+	App       string
 	LoginType types.OauthLoginType
 	Cfg       oauth.Config
 }
 
+func (o OauthOption) key() string {
+	return o.App + "-" + string(o.LoginType.LoginType())
+}
+
 // WithLoginType 注入登录方式
 func (o *OauthClient) WithLoginType(option OauthOption, cover ...bool) *OauthClient {
-	_, ok := o.oauthCliMap.Load(option.LoginType.LoginType())
+	_, ok := o.oauthCliMap.Load(option.key())
 	if !ok || (len(cover) > 0 && cover[0]) {
 		o.oauthCliMap.Store(option.LoginType.LoginType(), option.LoginType.New(option.Cfg))
 	}
 	return o
 }
 
-func (o *OauthClient) oauthCli(loginType types.OauthLoginType) (oauth.Oauth, error) {
+func (o *OauthClient) oauthCli(app string, loginType types.OauthLoginType) (oauth.Oauth, error) {
 	oc, ok := o.oauthCliMap.Load(loginType.LoginType())
 	if !ok {
 		return nil, fmt.Errorf("login type not configure")
@@ -52,8 +57,8 @@ func (o *OauthClient) oauthCli(loginType types.OauthLoginType) (oauth.Oauth, err
 }
 
 // AuthURL 生成web端的授权地址
-func (o *OauthClient) AuthURL(loginType types.OauthLoginType) (string, error) {
-	cli, err := o.oauthCli(loginType)
+func (o *OauthClient) AuthURL(app string, loginType types.OauthLoginType) (string, error) {
+	cli, err := o.oauthCli(app, loginType)
 	if err != nil {
 		return "", err
 	}
@@ -61,8 +66,8 @@ func (o *OauthClient) AuthURL(loginType types.OauthLoginType) (string, error) {
 }
 
 // Login 登录
-func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string, model.UserEntity, error) {
-	oauthCli, err := o.oauthCli(loginType)
+func (o *OauthClient) Login(app string, loginType types.OauthLoginType, code string) (string, model.UserEntity, error) {
+	oauthCli, err := o.oauthCli(app, loginType)
 	if err != nil {
 		return "", nil, err
 	}
@@ -79,6 +84,7 @@ func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string
 	oauthUserEntity := o.userRepo.GenOauthUser()
 	oauthUserEntity.SetOpenid(oauthUser.Openid)
 	oauthUserEntity.SetLoginType(loginType.LoginType())
+	oauthUserEntity.SetApp(app)
 	err = o.userRepo.GetOauthByOpenid(oauthUserEntity)
 	user := o.userRepo.GenUser()
 	if err != nil {
@@ -86,7 +92,7 @@ func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string
 			return "", nil, err
 		}
 		// 注册逻辑
-		user, err = o.register(loginType, oauthUser)
+		user, err = o.register(app, loginType, oauthUser)
 		if err != nil {
 			return "", nil, err
 		}
@@ -110,18 +116,20 @@ func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string
 
 }
 
-func (o *OauthClient) register(loginType types.OauthLoginType, oauthUser *oauth.UserInfo) (model.UserEntity, error) {
+func (o *OauthClient) register(app string, loginType types.OauthLoginType, oauthUser *oauth.UserInfo) (model.UserEntity, error) {
 	user := o.userRepo.GenUser()
 	user.SetLoginType(loginType.LoginType())
 	user.SetUsername(fmt.Sprintf("%s-%s", string(loginType.LoginType()), oauthUser.Openid))
 	user.SetIdentify(oauthUser.Openid)
 	user.SetNickname(oauthUser.Nickname)
 	user.SetAvatar(oauthUser.Avatar)
+	user.SetApp(app)
 
 	oauthUserEntity := o.userRepo.GenOauthUser()
 	oauthUserEntity.SetBindUserId(user.GetID())
 	oauthUserEntity.SetOpenid(oauthUser.Openid)
 	oauthUserEntity.SetLoginType(loginType.LoginType())
+	oauthUserEntity.SetApp(app)
 
 	err := o.userRepo.TransactionCreate(map[model.Entity]func(){
 		user: func() {

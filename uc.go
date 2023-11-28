@@ -88,6 +88,28 @@ func (c UserClient) RegisterWithNoCode(info UserInfo) (string, model.UserEntity,
 	return c.register(info)
 }
 
+// GetUserInfoById  根据id获取用户信息
+func (c UserClient) GetUserInfoById(id int64) (model.UserEntity, error) {
+	user := c.userRepo.GenUser()
+	user.SetId(id)
+	err := c.userRepo.GetUserById(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+// SaveUserProfile  保存用户信息
+func (c UserClient) SaveUserProfile(id int64, userInfo SupportModifyUserInfo) error {
+	user, err := c.GetUserInfoById(id)
+	if err != nil {
+		return err
+	}
+	user.SetNickname(userInfo.Name)
+	user.SetAvatar(userInfo.Avatar)
+	return c.userRepo.SaveUser(user)
+}
+
 func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	user := c.userRepo.GenUser()
 	user.SetApp(info.App)

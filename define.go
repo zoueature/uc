@@ -29,6 +29,11 @@ type BasicUserInfo struct {
 	Avatar string
 }
 
+type SupportModifyUserInfo struct {
+	Name   string
+	Avatar string
+}
+
 type Password struct {
 	Salt     string
 	Password string

@@ -51,6 +51,15 @@ func (o *OauthClient) oauthCli(loginType types.OauthLoginType) (oauth.Oauth, err
 	return oc.(oauth.Oauth), nil
 }
 
+// AuthURL 生成web端的授权地址
+func (o *OauthClient) AuthURL(loginType types.OauthLoginType) (string, error) {
+	cli, err := o.oauthCli(loginType)
+	if err != nil {
+		return "", err
+	}
+	return cli.GenAuthLoginURL(), nil
+}
+
 // Login 登录
 func (o *OauthClient) Login(loginType types.OauthLoginType, code string) (string, model.UserEntity, error) {
 	oauthCli, err := o.oauthCli(loginType)

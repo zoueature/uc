@@ -35,13 +35,13 @@ type OauthOption struct {
 	Cfg       oauth.Config
 }
 
-func (o OauthOption) key() string {
-	return o.App + "-" + string(o.LoginType.LoginType())
+func storeOauthCliKey(app string, loginType types.OauthLoginType) string {
+	return app + "-" + string(loginType.LoginType())
 }
 
 // WithLoginType 注入登录方式
 func (o *OauthClient) WithLoginType(option OauthOption, cover ...bool) *OauthClient {
-	_, ok := o.oauthCliMap.Load(option.key())
+	_, ok := o.oauthCliMap.Load(storeOauthCliKey(option.App, option.LoginType))
 	if !ok || (len(cover) > 0 && cover[0]) {
 		o.oauthCliMap.Store(option.LoginType.LoginType(), option.LoginType.New(option.Cfg))
 	}
@@ -49,7 +49,7 @@ func (o *OauthClient) WithLoginType(option OauthOption, cover ...bool) *OauthCli
 }
 
 func (o *OauthClient) oauthCli(app string, loginType types.OauthLoginType) (oauth.Oauth, error) {
-	oc, ok := o.oauthCliMap.Load(loginType.LoginType())
+	oc, ok := o.oauthCliMap.Load(storeOauthCliKey(app, loginType))
 	if !ok {
 		return nil, fmt.Errorf("login type not configure")
 	}

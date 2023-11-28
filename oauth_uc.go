@@ -41,9 +41,10 @@ func storeOauthCliKey(app string, loginType types.OauthLoginType) string {
 
 // WithLoginType 注入登录方式
 func (o *OauthClient) WithLoginType(option OauthOption, cover ...bool) *OauthClient {
-	_, ok := o.oauthCliMap.Load(storeOauthCliKey(option.App, option.LoginType))
+	k := storeOauthCliKey(option.App, option.LoginType)
+	_, ok := o.oauthCliMap.Load(k)
 	if !ok || (len(cover) > 0 && cover[0]) {
-		o.oauthCliMap.Store(option.LoginType.LoginType(), option.LoginType.New(option.Cfg))
+		o.oauthCliMap.Store(k, option.LoginType.New(option.Cfg))
 	}
 	return o
 }

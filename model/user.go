@@ -1,6 +1,6 @@
 package model
 
-import "github.com/jiebutech/uc/types"
+import "gitlab.jiebu.com/pkg/uc/types"
 
 type User struct {
 	Id        int64           `json:"id" gorm:"id"`

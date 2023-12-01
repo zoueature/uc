@@ -2,9 +2,9 @@ package uc
 
 import (
 	"fmt"
-	"github.com/jiebutech/uc/model"
-	"github.com/jiebutech/uc/oauth"
-	"github.com/jiebutech/uc/types"
+	"gitlab.jiebu.com/pkg/uc/model"
+	"gitlab.jiebu.com/pkg/uc/oauth"
+	"gitlab.jiebu.com/pkg/uc/types"
 	"sync"
 )
 

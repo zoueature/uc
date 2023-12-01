@@ -20,14 +20,16 @@ func UserAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 		}
 		if token == "" {
 			forbidden()
+			ctx.Abort()
 			return
 		}
 		user, err := decoder.decodeJwt(token)
 		if err != nil {
 			forbidden()
+			ctx.Abort()
 			return
 		}
-		ctx.Set("userId", user.Id)
+		ctx.Set("user_id", user.Id)
 		ctx.Set("user", user)
 	}
 }

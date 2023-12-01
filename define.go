@@ -4,9 +4,9 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/jiebutech/uc/model"
-	"github.com/jiebutech/uc/types"
 	"github.com/spf13/cast"
+	"gitlab.jiebu.com/pkg/uc/model"
+	"gitlab.jiebu.com/pkg/uc/types"
 	"time"
 )
 

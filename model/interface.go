@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/jiebutech/uc/types"
+	"gitlab.jiebu.com/pkg/uc/types"
 	"gorm.io/gorm/schema"
 )
 

@@ -1,6 +1,6 @@
 package types
 
-import "github.com/jiebutech/uc/oauth"
+import "gitlab.jiebu.com/pkg/uc/oauth"
 
 type OauthLoginType interface {
 	New(config oauth.Config) oauth.Oauth

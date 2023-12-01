@@ -1,10 +1,10 @@
 package uc
 
 import (
-	"github.com/jiebutech/uc/cache"
-	"github.com/jiebutech/uc/model"
-	"github.com/jiebutech/uc/sender"
-	"github.com/jiebutech/uc/types"
+	"gitlab.jiebu.com/pkg/uc/cache"
+	"gitlab.jiebu.com/pkg/uc/model"
+	"gitlab.jiebu.com/pkg/uc/sender"
+	"gitlab.jiebu.com/pkg/uc/types"
 	"sync"
 )
 

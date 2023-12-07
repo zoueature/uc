@@ -9,7 +9,7 @@ import (
 func UserAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		forbidden := func() {
-			ctx.JSON(http.StatusForbidden, gin.H{"status": "Access Denied"})
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "Access Denied"})
 		}
 		token := ctx.GetHeader("Authorization")
 		if token == "" {
@@ -20,13 +20,11 @@ func UserAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 		}
 		if token == "" {
 			forbidden()
-			ctx.Abort()
 			return
 		}
 		user, err := decoder.decodeJwt(token)
 		if err != nil {
 			forbidden()
-			ctx.Abort()
 			return
 		}
 		ctx.Set("user_id", user.Id)

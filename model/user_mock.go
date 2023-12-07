@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	types "gitlab.jiebu.com/pkg/uc/types"
+	types "github.com/zoueature/uc/types"
 )
 
 // MockEntity is a mock of Entity interface.

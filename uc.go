@@ -2,10 +2,10 @@ package uc
 
 import (
 	"errors"
-	"gitlab.jiebu.com/pkg/uc/cache"
-	"gitlab.jiebu.com/pkg/uc/model"
-	"gitlab.jiebu.com/pkg/uc/sender"
-	"gitlab.jiebu.com/pkg/uc/types"
+	"github.com/zoueature/uc/cache"
+	"github.com/zoueature/uc/model"
+	"github.com/zoueature/uc/sender"
+	"github.com/zoueature/uc/types"
 	"sync"
 )
 

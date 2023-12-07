@@ -2,9 +2,9 @@ package uc
 
 import (
 	"fmt"
-	"gitlab.jiebu.com/pkg/uc/model"
-	"gitlab.jiebu.com/pkg/uc/oauth"
-	"gitlab.jiebu.com/pkg/uc/types"
+	"github.com/zoueature/uc/model"
+	"github.com/zoueature/uc/oauth"
+	"github.com/zoueature/uc/types"
 	"sync"
 )
 

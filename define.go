@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/cast"
-	"gitlab.jiebu.com/pkg/uc/model"
-	"gitlab.jiebu.com/pkg/uc/types"
+	"github.com/zoueature/uc/model"
+	"github.com/zoueature/uc/types"
 	"time"
 )
 

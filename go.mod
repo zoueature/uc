@@ -1,4 +1,4 @@
-module gitlab.jiebu.com/pkg/uc
+module github.com/zoueature/uc
 
 go 1.21.4
 

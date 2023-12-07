@@ -148,6 +148,9 @@ func (c *UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	user.SetApp(info.App)
 	user.SetLoginType(info.Type)
 	user.SetIdentify(info.Identify)
+	if info.Username == "" {
+		info.Username = info.App + "-" + info.Identify + "-" + string(info.Type)
+	}
 	user.SetUsername(info.Username)
 	user.SetPassword(info.Password.marshalPassword())
 	user.SetAvatar(info.Avatar)

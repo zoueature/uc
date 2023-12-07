@@ -1,6 +1,7 @@
 package uc
 
 import (
+	"errors"
 	"gitlab.jiebu.com/pkg/uc/cache"
 	"gitlab.jiebu.com/pkg/uc/model"
 	"gitlab.jiebu.com/pkg/uc/sender"
@@ -9,26 +10,50 @@ import (
 )
 
 type UserClient struct {
-	cache    cache.Cache
-	sender   sender.SmsCodeSender
-	userRepo model.UserResource
-	jwt      JwtEncoder
+	cache      cache.Cache
+	userRepo   model.UserResource
+	jwtClients sync.Map
+	senders    sync.Map
 }
 
 var ucCli *UserClient
 var onceNewUc = sync.Once{}
 
 // NewUserClient 实例化用户操作客户端
-func NewUserClient(cache cache.Cache, sender sender.SmsCodeSender, repo model.UserResource, jwtClient JwtEncoder) *UserClient {
+func NewUserClient(cache cache.Cache, repo model.UserResource) *UserClient {
 	onceNewUc.Do(func() {
 		ucCli = &UserClient{
-			cache:    cache,
-			sender:   sender,
-			userRepo: repo,
-			jwt:      jwtClient,
+			cache:      cache,
+			userRepo:   repo,
+			jwtClients: sync.Map{},
+			senders:    sync.Map{},
 		}
 	})
 	return ucCli
+}
+
+func (c *UserClient) WithEncoder(app string, jwtClient JwtEncoder) {
+	c.jwtClients.Store(app, jwtClient)
+}
+
+func (c *UserClient) WithSender(app string, sender sender.SmsCodeSender) {
+	c.senders.Store(app, sender)
+}
+
+func (c *UserClient) sender(app string) (sender.SmsCodeSender, error) {
+	s, ok := c.senders.Load(app)
+	if !ok {
+		return nil, errors.New(app + " sender not config")
+	}
+	return s.(sender.SmsCodeSender), nil
+}
+
+func (c *UserClient) jwt(app string) (JwtEncoder, error) {
+	s, ok := c.jwtClients.Load(app)
+	if !ok {
+		return nil, errors.New(app + " jwt encoder not config")
+	}
+	return s.(JwtEncoder), nil
 }
 
 // Login 用户登录并返回token
@@ -44,7 +69,11 @@ func (c *UserClient) Login(id UserIdentify, password Password) (string, model.Us
 	if user.GetPassword() != password.marshalPassword() {
 		return "", nil, types.PasswordNotMathErr
 	}
-	token, err := c.jwt.encodeJwt(user)
+	jwt, err := c.jwt(id.App)
+	if err != nil {
+		return "", nil, err
+	}
+	token, err := jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}
@@ -52,7 +81,7 @@ func (c *UserClient) Login(id UserIdentify, password Password) (string, model.Us
 }
 
 // LoginByUsername 用户名密码登录并返回token
-func (c UserClient) LoginByUsername(app string, t types.LoginType, username string, password Password) (string, model.UserEntity, error) {
+func (c *UserClient) LoginByUsername(app string, t types.LoginType, username string, password Password) (string, model.UserEntity, error) {
 	user := c.userRepo.GenUser()
 	user.SetApp(app)
 	user.SetLoginType(t)
@@ -64,7 +93,11 @@ func (c UserClient) LoginByUsername(app string, t types.LoginType, username stri
 	if user.GetPassword() != password.marshalPassword() {
 		return "", nil, types.PasswordNotMathErr
 	}
-	token, err := c.jwt.encodeJwt(user)
+	jwt, err := c.jwt(app)
+	if err != nil {
+		return "", nil, err
+	}
+	token, err := jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}
@@ -72,7 +105,7 @@ func (c UserClient) LoginByUsername(app string, t types.LoginType, username stri
 }
 
 // Register 注册
-func (c UserClient) Register(code string, info UserInfo) (string, model.UserEntity, error) {
+func (c *UserClient) Register(code string, info UserInfo) (string, model.UserEntity, error) {
 	ok, err := c.checkCode(types.RegisterCodeType, info.App, info.Identify, code)
 	if err != nil {
 		return "", nil, err
@@ -84,12 +117,12 @@ func (c UserClient) Register(code string, info UserInfo) (string, model.UserEnti
 }
 
 // RegisterWithNoCode 无验证码注册
-func (c UserClient) RegisterWithNoCode(info UserInfo) (string, model.UserEntity, error) {
+func (c *UserClient) RegisterWithNoCode(info UserInfo) (string, model.UserEntity, error) {
 	return c.register(info)
 }
 
 // GetUserInfoById  根据id获取用户信息
-func (c UserClient) GetUserInfoById(id int64) (model.UserEntity, error) {
+func (c *UserClient) GetUserInfoById(id int64) (model.UserEntity, error) {
 	user := c.userRepo.GenUser()
 	user.SetId(id)
 	err := c.userRepo.GetUserById(user)
@@ -100,7 +133,7 @@ func (c UserClient) GetUserInfoById(id int64) (model.UserEntity, error) {
 }
 
 // SaveUserProfile  保存用户信息
-func (c UserClient) SaveUserProfile(id int64, userInfo SupportModifyUserInfo) error {
+func (c *UserClient) SaveUserProfile(id int64, userInfo SupportModifyUserInfo) error {
 	user, err := c.GetUserInfoById(id)
 	if err != nil {
 		return err
@@ -110,7 +143,7 @@ func (c UserClient) SaveUserProfile(id int64, userInfo SupportModifyUserInfo) er
 	return c.userRepo.SaveUser(user)
 }
 
-func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
+func (c *UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	user := c.userRepo.GenUser()
 	user.SetApp(info.App)
 	user.SetLoginType(info.Type)
@@ -131,7 +164,11 @@ func (c UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	if err != nil {
 		return "", nil, err
 	}
-	token, err := c.jwt.encodeJwt(user)
+	jwt, err := c.jwt(info.App)
+	if err != nil {
+		return "", nil, err
+	}
+	token, err := jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}
@@ -160,7 +197,11 @@ func (c *UserClient) SendSmsCode(t types.VerifyCodeType, identify UserIdentify) 
 		return err
 	}
 	// 调用发送器发送验证码
-	return c.sender.Send(code, identify.Identify)
+	codeSender, err := c.sender(identify.App)
+	if err != nil {
+		return err
+	}
+	return codeSender.Send(code, identify.Identify)
 }
 
 // ChangePasswordByCode 根据验证码修改密码

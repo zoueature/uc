@@ -10,20 +10,20 @@ import (
 
 type OauthClient struct {
 	oauthCliMap sync.Map
+	jwtClients  sync.Map
 	userRepo    model.UserResource
-	jwt         JwtEncoder
 }
 
 var oauthCli *OauthClient
 var onceNewOauth = sync.Once{}
 
 // NewOauthClient 实例化第三方登录客户端
-func NewOauthClient(userRepo model.UserResource, jwtClient JwtEncoder) *OauthClient {
+func NewOauthClient(userRepo model.UserResource) *OauthClient {
 	onceNewOauth.Do(func() {
 		oauthCli = &OauthClient{
 			userRepo:    userRepo,
 			oauthCliMap: sync.Map{},
-			jwt:         jwtClient,
+			jwtClients:  sync.Map{},
 		}
 	})
 	return oauthCli
@@ -33,6 +33,7 @@ type OauthOption struct {
 	App       string
 	LoginType types.OauthLoginType
 	Cfg       oauth.Config
+	Jwt       JwtEncoder
 }
 
 func storeOauthCliKey(app string, loginType types.OauthLoginType) string {
@@ -43,8 +44,13 @@ func storeOauthCliKey(app string, loginType types.OauthLoginType) string {
 func (o *OauthClient) WithLoginType(option OauthOption, cover ...bool) *OauthClient {
 	k := storeOauthCliKey(option.App, option.LoginType)
 	_, ok := o.oauthCliMap.Load(k)
-	if !ok || (len(cover) > 0 && cover[0]) {
+	needCover := len(cover) > 0 && cover[0]
+	if !ok || needCover {
 		o.oauthCliMap.Store(k, option.LoginType.New(option.Cfg))
+	}
+	_, ok = o.jwtClients.Load(option.App)
+	if !ok || needCover {
+		o.jwtClients.Store(option.App, option.Jwt)
 	}
 	return o
 }
@@ -55,6 +61,14 @@ func (o *OauthClient) oauthCli(app string, loginType types.OauthLoginType) (oaut
 		return nil, fmt.Errorf("login type not configure")
 	}
 	return oc.(oauth.Oauth), nil
+}
+
+func (o *OauthClient) jwtCli(app string) (JwtEncoder, error) {
+	oc, ok := o.oauthCliMap.Load(app)
+	if !ok {
+		return nil, fmt.Errorf(app + " jwt not configure")
+	}
+	return oc.(JwtEncoder), nil
 }
 
 // AuthURL 生成web端的授权地址
@@ -109,7 +123,11 @@ func (o *OauthClient) Login(app string, loginType types.OauthLoginType, code str
 			return "", nil, err
 		}
 	}
-	token, err := o.jwt.encodeJwt(user)
+	jwt, err := o.jwtCli(app)
+	if err != nil {
+		return "", nil, err
+	}
+	token, err := jwt.encodeJwt(user)
 	if err != nil {
 		return "", nil, err
 	}

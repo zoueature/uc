@@ -31,3 +31,23 @@ func UserAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 		ctx.Set("user", user)
 	}
 }
+
+// UserShouldAuthGinMiddleware 用户登录信息解析， 不强制登录
+func UserShouldAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		if token == "" {
+			token, _ = ctx.GetQuery("token")
+		}
+		if token == "" {
+			token, _ = ctx.GetPostForm("token")
+		}
+		if token != "" {
+			user, err := decoder.decodeJwt(token)
+			if err == nil {
+				ctx.Set("user_id", user.Id)
+				ctx.Set("user", user)
+			}
+		}
+	}
+}

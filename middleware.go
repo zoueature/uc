@@ -11,13 +11,7 @@ func UserAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 		forbidden := func() {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "Access Denied"})
 		}
-		token := ctx.GetHeader("Authorization")
-		if token == "" {
-			token, _ = ctx.GetQuery("token")
-		}
-		if token == "" {
-			token, _ = ctx.GetPostForm("token")
-		}
+		token := getToken(ctx)
 		if token == "" {
 			forbidden()
 			return
@@ -35,13 +29,7 @@ func UserAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 // UserShouldAuthGinMiddleware 用户登录信息解析， 不强制登录
 func UserShouldAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("Authorization")
-		if token == "" {
-			token, _ = ctx.GetQuery("token")
-		}
-		if token == "" {
-			token, _ = ctx.GetPostForm("token")
-		}
+		token := getToken(ctx)
 		if token != "" {
 			user, err := decoder.decodeJwt(token)
 			if err == nil {
@@ -50,4 +38,18 @@ func UserShouldAuthGinMiddleware(decoder JwtEncoder) gin.HandlerFunc {
 			}
 		}
 	}
+}
+
+func getToken(ctx *gin.Context) string {
+	token := ctx.GetHeader("Authorization")
+	if token == "" {
+		token, _ = ctx.GetQuery("token")
+	}
+	if token == "" {
+		token, _ = ctx.GetPostForm("token")
+	}
+	if token == "" {
+		token, _ = ctx.Cookie("token")
+	}
+	return token
 }

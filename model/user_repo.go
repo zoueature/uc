@@ -33,7 +33,7 @@ func (repo *UserRepo) IsUserNotFound(err error) bool {
 
 func (repo *UserRepo) GetOauthByOpenid(dest OauthUserEntity) error {
 	where := fmt.Sprintf("%s = ? AND %s = ? AND %s = ?", dest.AppKey(), dest.OpenidKey(), dest.LoginTypeKey())
-	return repo.db.Table(dest.TableName()).Where(where, dest.GetApp(), dest.GetOpenid(), dest.OpenidKey()).First(dest).Error
+	return repo.db.Table(dest.TableName()).Where(where, dest.GetApp(), dest.GetOpenid(), dest.GetLoginType()).First(dest).Error
 }
 
 func (repo *UserRepo) GetUserById(dest UserEntity) error {

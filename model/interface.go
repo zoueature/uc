@@ -48,6 +48,7 @@ type OauthUserEntity interface {
 	SetOpenid(openid string)
 	SetLoginType(loginType types.LoginType)
 	LoginTypeKey() string
+	GetLoginType() types.LoginType
 	OpenidKey() string
 	AppKey() string
 	GetApp() string

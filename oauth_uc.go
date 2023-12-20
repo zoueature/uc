@@ -154,6 +154,9 @@ func (o *OauthClient) register(app string, loginType types.OauthLoginType, oauth
 		user: func() {
 			oauthUserEntity.SetBindUserId(user.GetID())
 		},
+		oauthUserEntity: func() {
+
+		},
 	})
 	if err != nil {
 		return nil, err

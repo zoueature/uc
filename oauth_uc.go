@@ -64,7 +64,7 @@ func (o *OauthClient) oauthCli(app string, loginType types.OauthLoginType) (oaut
 }
 
 func (o *OauthClient) jwtCli(app string) (JwtEncoder, error) {
-	oc, ok := o.oauthCliMap.Load(app)
+	oc, ok := o.jwtClients.Load(app)
 	if !ok {
 		return nil, fmt.Errorf(app + " jwt not configure")
 	}

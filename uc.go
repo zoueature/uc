@@ -48,6 +48,19 @@ func (c *UserClient) sender(app string) (sender.SmsCodeSender, error) {
 	return s.(sender.SmsCodeSender), nil
 }
 
+// DecodeToken token解析
+func (c *UserClient) DecodeToken(app, token string) (*BasicUserInfo, error) {
+	decoder, err := c.jwt(app)
+	if err != nil {
+		return nil, err
+	}
+	info, err := decoder.decodeJwt(token)
+	if err != nil {
+		return nil, err
+	}
+	return info, nil
+}
+
 func (c *UserClient) jwt(app string) (JwtEncoder, error) {
 	s, ok := c.jwtClients.Load(app)
 	if !ok {

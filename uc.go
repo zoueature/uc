@@ -168,6 +168,7 @@ func (c *UserClient) register(info UserInfo) (string, model.UserEntity, error) {
 	user.SetPassword(info.Password.marshalPassword())
 	user.SetAvatar(info.Avatar)
 	user.SetNickname(info.Nickname)
+	user.SetChannel(info.Channel)
 	err := c.userRepo.GetUserByIdentify(user)
 	if err == nil {
 		return "", nil, types.UserExistsErr

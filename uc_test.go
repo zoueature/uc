@@ -4,7 +4,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/zoueature/uc/cache"
 	"github.com/zoueature/uc/model"
-	"github.com/zoueature/uc/sender"
 	"github.com/zoueature/uc/types"
 	"testing"
 )
@@ -41,15 +40,7 @@ func TestNewInternalClient(t *testing.T) {
 
 	cli := NewUserClient(
 		cache.NewRedisCache("192.168.1.202:6379", ""),
-		sender.NewEmailSender(&sender.EmailConfig{
-			From:     "zoueature@gmail.com",
-			Host:     "smtp.gmail.com",
-			Port:     465,
-			Username: "zoueature",
-			Password: "dvyjaualoktcrsxx",
-		}, sender.DefaultMailMessage()),
 		mockUserRepo,
-		DefaultJwtEncoder("12321313", 32132131),
 	)
 	err := cli.SendSmsCode(types.RegisterCodeType, UserIdentify{
 		App:      "",

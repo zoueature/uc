@@ -8,6 +8,7 @@ CREATE TABLE `user`
     `password`        char(40)     NOT NULL DEFAULT '' COMMENT '密码',
     `nickname`        varchar(32)  NOT NULL DEFAULT '' COMMENT '昵称',
     `avatar`          varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
+    `channel` varchar(64) not null default 'official' comment '来源渠道',
     `create_time`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `last_login_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后登录时间',

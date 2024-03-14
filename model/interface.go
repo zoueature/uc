@@ -29,6 +29,7 @@ type UserEntity interface {
 	IdentifyKey() string
 	UsernameKey() string
 	PasswordKey() string
+	GetChannel() string
 
 	SetId(id int64)
 	SetIdentify(identify string)
@@ -38,6 +39,7 @@ type UserEntity interface {
 	SetAvatar(avatar string)
 	SetPassword(password string)
 	SetApp(string2 string)
+	SetChannel(channel string)
 }
 
 type OauthUserEntity interface {

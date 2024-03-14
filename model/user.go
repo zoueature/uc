@@ -11,6 +11,7 @@ type User struct {
 	Nickname  string          `json:"nickname" gorm:"nickname"`
 	Avatar    string          `json:"avatar" gorm:"avatar"`
 	Password  string          `json:"password" gorm:"password"`
+	Channel   string          `json:"channel" gorm:"channel"`
 }
 
 func (u *User) SetId(id int64) {
@@ -91,6 +92,14 @@ func (u *User) SetAvatar(avatar string) {
 
 func (u *User) SetPassword(password string) {
 	u.Password = password
+}
+
+func (u *User) SetChannel(channel string) {
+	u.Channel = channel
+}
+
+func (u *User) GetChannel() string {
+	return u.Channel
 }
 
 func (u *User) ToMap() map[string]interface{} {

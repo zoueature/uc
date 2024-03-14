@@ -22,6 +22,7 @@ type UserInfo struct {
 	Avatar   string
 	Nickname string
 	Username string
+	Channel  string
 }
 type BasicUserInfo struct {
 	Id     int64

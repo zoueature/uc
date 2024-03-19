@@ -145,6 +145,19 @@ func (c *UserClient) GetUserInfoById(id int64) (model.UserEntity, error) {
 	return user, nil
 }
 
+// GetUserInfoByIdentify  根据id获取用户信息
+func (c *UserClient) GetUserInfoByIdentify(identify UserIdentify) (model.UserEntity, error) {
+	user := c.userRepo.GenUser()
+	user.SetApp(identify.App)
+	user.SetLoginType(identify.Type)
+	user.SetIdentify(identify.Identify)
+	err := c.userRepo.GetUserByIdentify(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 // SaveUserProfile  保存用户信息
 func (c *UserClient) SaveUserProfile(id int64, userInfo SupportModifyUserInfo) error {
 	user, err := c.GetUserInfoById(id)

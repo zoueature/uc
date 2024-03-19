@@ -202,12 +202,15 @@ func (c *UserClient) checkCode(t types.VerifyCodeType, app, identify string, cod
 }
 
 // SendSmsCode 验证码发送
-func (c *UserClient) SendSmsCode(t types.VerifyCodeType, identify UserIdentify) error {
+func (c *UserClient) SendSmsCode(t types.VerifyCodeType, identify UserIdentify, codeContainer *string) error {
 	ckey, err := t.CacheKey()
 	if err != nil {
 		return err
 	}
 	code := generateSmsCode()
+	if codeContainer != nil {
+		*codeContainer = code
+	}
 	// 缓存验证码
 	err = c.cache.Set(ckey.CacheKey(identify.App, identify.Identify), code, codeCacheTTL)
 	if err != nil {

@@ -224,6 +224,21 @@ func (c *UserClient) SendSmsCode(t types.VerifyCodeType, identify UserIdentify, 
 	return codeSender.Send(code, identify.Identify)
 }
 
+// GenerateSmsCode 生成验证码并返回
+func (c *UserClient) GenerateSmsCode(t types.VerifyCodeType, identify UserIdentify) (string, error) {
+	ckey, err := t.CacheKey()
+	if err != nil {
+		return "", err
+	}
+	code := generateSmsCode()
+	// 缓存验证码
+	err = c.cache.Set(ckey.CacheKey(identify.App, identify.Identify), code, codeCacheTTL)
+	if err != nil {
+		return "", err
+	}
+	return code, nil
+}
+
 // ChangePasswordByCode 根据验证码修改密码
 func (c *UserClient) ChangePasswordByCode(identify UserIdentify, code string, newPassword Password) error {
 	ok, err := c.checkCode(types.PasswordCodeType, identify.App, identify.Identify, code)
